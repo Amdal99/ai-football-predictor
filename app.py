@@ -1,0 +1,80 @@
+import streamlit as st
+import math
+
+st.set_page_config(
+    page_title="AI Football Predictor",
+    page_icon="⚽",
+    layout="wide"
+)
+
+st.title("⚽ AI Football Predictor")
+st.caption("Demoversjon – kun virtuelle penger")
+
+leagues = {
+    "Eliteserien": ["Viking", "Bodø/Glimt"],
+    "Premier League": ["Arsenal", "Chelsea"],
+    "Bundesliga": ["Bayern München", "Dortmund"],
+    "2. Bundesliga": ["Schalke", "Hertha Berlin"]
+}
+
+league = st.selectbox("Velg liga", list(leagues))
+home, away = leagues[league]
+
+st.subheader(f"{home} vs {away}")
+
+home_goals = st.slider(
+    "Forventede hjemmemål", 0.2, 4.0, 1.7, 0.1
+)
+away_goals = st.slider(
+    "Forventede bortemål", 0.2, 4.0, 1.1, 0.1
+)
+
+def poisson(k, lam):
+    return math.exp(-lam) * lam**k / math.factorial(k)
+
+p1 = px = p2 = 0.0
+for h in range(16):
+    for a in range(16):
+        p = poisson(h, home_goals) * poisson(a, away_goals)
+        if h > a:
+            p1 += p
+        elif h == a:
+            px += p
+        else:
+            p2 += p
+
+total = p1 + px + p2
+p1, px, p2 = [p / total for p in (p1, px, p2)]
+
+c1, c2, c3 = st.columns(3)
+c1.metric("Hjemmeseier", f"{p1:.1%}")
+c2.metric("Uavgjort", f"{px:.1%}")
+c3.metric("Borteseier", f"{p2:.1%}")
+
+st.subheader("📊 Oddsanalyse")
+outcome = st.selectbox(
+    "Velg utfall", ["Hjemmeseier", "Uavgjort", "Borteseier"]
+)
+odds = st.number_input(
+    "Desimalodds", min_value=1.01, value=2.10, step=0.05
+)
+
+prob = {
+    "Hjemmeseier": p1,
+    "Uavgjort": px,
+    "Borteseier": p2
+}[outcome]
+
+edge = prob * odds - 1
+st.metric("Teoretisk forventet avkastning", f"{edge:.1%}")
+
+if edge > 0:
+    st.success("Modellen viser mulig verdi i oddsen.")
+else:
+    st.warning("Ingen positiv modellverdi ved denne oddsen.")
+
+st.info(
+    "Alle lag, forventede mål og odds er "
+    "demonstrasjonsdata. Ikke bruk dette "
+    "som grunnlag for ekte pengespill."
+)
