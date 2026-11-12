@@ -43,6 +43,45 @@ def hent_resultater(ligakode):
         st.error(f"Kunne ikke hente resultater: {e}")
         return []
 
+
+def beregn_lagstatistikk(kamper):
+    statistikk = {}
+
+    for kamp in kamper:
+        hjemme = kamp["homeTeam"]["name"]
+        borte = kamp["awayTeam"]["name"]
+        resultat = kamp.get("score", {}).get("fullTime", {})
+
+        hjemmemal = resultat.get("home")
+        bortemal = resultat.get("away")
+
+        if hjemmemal is None or bortemal is None:
+            continue
+
+        for lag in [hjemme, borte]:
+            if lag not in statistikk:
+                statistikk[lag] = {
+                    "kamper": 0,
+                    "scoret": 0,
+                    "sluppet_inn": 0
+                }
+
+        statistikk[hjemme]["kamper"] += 1
+        statistikk[hjemme]["scoret"] += hjemmemal
+        statistikk[hjemme]["sluppet_inn"] += bortemal
+
+        statistikk[borte]["kamper"] += 1
+        statistikk[borte]["scoret"] += bortemal
+        statistikk[borte]["sluppet_inn"] += hjemmemal
+
+    for lag, tall in statistikk.items():
+        antall = tall["kamper"]
+        tall["snitt_scoret"] = tall["scoret"] / antall
+        tall["snitt_sluttet_inn"] = tall["sluppet_inn"] / antall
+
+    return statistikk
+
+
 st.title("⚽ AI Football Predictor")
 st.caption("Demoversjon – kun virtuelle penger")
 
