@@ -100,6 +100,15 @@ ligakoder = {
     "2. Bundesliga": "BL2",
 }
 
+
+
+if league in ligakoder:
+    historiske_kamper = hent_resultater(ligakoder[league])
+    lagstatistikk = beregn_lagstatistikk(historiske_kamper)
+
+    st.write(f"Historiske kamper hentet: {len(historiske_kamper)}")
+    st.write(f"Antall lag med statistikk: {len(lagstatistikk)}")
+
 if league in ligakoder:
     st.subheader("Kommende kamper")
     kamper = hent_kamper(ligakoder[league])
