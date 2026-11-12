@@ -1,5 +1,6 @@
 import streamlit as st
 import math
+import requests
 
 st.set_page_config(
     page_title="AI Football Predictor",
@@ -7,6 +8,8 @@ st.set_page_config(
     layout="wide"
 )
 
+API_KEY = st.secrets["FOOTBALL_API_KEY"]
+HEADERS = {"X-Auth-Token": API_KEY}
 st.title("⚽ AI Football Predictor")
 st.caption("Demoversjon – kun virtuelle penger")
 
