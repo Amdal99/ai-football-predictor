@@ -25,6 +25,24 @@ def hent_kamper(ligakode):
     except requests.RequestException as e:
         st.error(f"Kunne ikke hente kamper: {e}")
         return []
+
+
+@st.cache_data(ttl=3600)
+def hent_resultater(ligakode):
+    url = f"https://api.football-data.org/v4/competitions/{ligakode}/matches"
+    try:
+        response = requests.get(
+            url,
+            headers=HEADERS,
+            params={"status": "FINISHED"},
+            timeout=15
+        )
+        response.raise_for_status()
+        return response.json().get("matches", [])
+    except requests.RequestException as e:
+        st.error(f"Kunne ikke hente resultater: {e}")
+        return []
+
 st.title("⚽ AI Football Predictor")
 st.caption("Demoversjon – kun virtuelle penger")
 
