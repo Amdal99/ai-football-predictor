@@ -10,6 +10,21 @@ st.set_page_config(
 
 API_KEY = st.secrets["FOOTBALL_API_KEY"]
 HEADERS = {"X-Auth-Token": API_KEY}
+@st.cache_data(ttl=3600)
+def hent_kamper(ligakode):
+    url = f"https://api.football-data.org/v4/competitions/{ligakode}/matches"
+    try:
+        response = requests.get(
+            url,
+            headers=HEADERS,
+            params={"status": "SCHEDULED"},
+            timeout=15
+        )
+        response.raise_for_status()
+        return response.json().get("matches", [])
+    except requests.RequestException as e:
+        st.error(f"Kunne ikke hente kamper: {e}")
+        return []
 st.title("⚽ AI Football Predictor")
 st.caption("Demoversjon – kun virtuelle penger")
 
