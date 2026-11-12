@@ -37,7 +37,24 @@ leagues = {
 
 league = st.selectbox("Velg liga", list(leagues))
 home, away = leagues[league]
+ligakoder = {
+    "Premier League": "PL",
+    "Bundesliga": "BL1",
+    "2. Bundesliga": "BL2",
+}
 
+if league in ligakoder:
+    st.subheader("Kommende kamper")
+    kamper = hent_kamper(ligakoder[league])
+
+    if kamper:
+        for kamp in kamper[:10]:
+            hjemmelag = kamp["homeTeam"]["name"]
+            bortelag = kamp["awayTeam"]["name"]
+            dato = kamp["utcDate"][:10]
+            st.write(f"{dato}: {hjemmelag} vs {bortelag}")
+    else:
+        st.info("Ingen kommende kamper tilgjengelig fra API-et.")
 st.subheader(f"{home} vs {away}")
 
 home_goals = st.slider(
