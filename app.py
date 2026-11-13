@@ -97,6 +97,8 @@ leagues = {
 
 league = st.selectbox("Velg liga", list(leagues))
 home, away = leagues[league]
+
+
 ligakoder = {
     "Premier League": "PL",
     "Bundesliga": "BL1",
@@ -127,6 +129,10 @@ if league in ligakoder:
             hjemmelag = kamp["homeTeam"]["name"]
             bortelag = kamp["awayTeam"]["name"]
             dato = kamp["utcDate"][:10]
+            hjemmestatistikk = finn_lagstatistikk(hjemmelag, lagstatistikk)
+            
+            bortestatistikk = finn_lagstatistikk(bortelag, lagstatistikk)
+
             st.write(f"{dato}: {hjemmelag} vs {bortelag}")
     else:
         st.info("Ingen kommende kamper tilgjengelig fra API-et.")
