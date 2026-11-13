@@ -109,6 +109,10 @@ if league in ligakoder:
     st.write(f"Historiske kamper hentet: {len(historiske_kamper)}")
     st.write(f"Antall lag med statistikk: {len(lagstatistikk)}")
 
+    if lagstatistikk:
+        st.write("Lag med historiske data:")
+        st.write(list(lagstatistikk.keys())[:5])
+
 if league in ligakoder:
     st.subheader("Kommende kamper")
     kamper = hent_kamper(ligakoder[league])
