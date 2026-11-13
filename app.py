@@ -82,6 +82,9 @@ def beregn_lagstatistikk(kamper):
     return statistikk
 
 
+def finn_lagstatistikk(lagnavn, statistikk):
+    return statistikk.get(lagnavn)
+
 st.title("⚽ AI Football Predictor")
 st.caption("Demoversjon – kun virtuelle penger")
 
@@ -112,6 +115,8 @@ if league in ligakoder:
     if lagstatistikk:
         st.write("Lag med historiske data:")
         st.write(list(lagstatistikk.keys())[:5])
+
+
 
 if league in ligakoder:
     st.subheader("Kommende kamper")
