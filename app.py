@@ -234,7 +234,7 @@ else:
     away_goals = 1.1
 
 
-
+st.write("DEBUG valgte mål:", home_goals, away_goals)
 p1, px, p2 = beregn_sannsynligheter(home_goals, away_goals)
 
 c1, c2, c3 = st.columns(3)
