@@ -179,14 +179,14 @@ if league in ligakoder:
             + hjemmestatistikk["snitt_sluppet_inn"]
         ) / 2
     )
-            else:
-            kamp_home_goals = 1.7
-            kamp_away_goals = 1.1
+        else:
+                kamp_home_goals = 1.7
+                kamp_away_goals = 1.1
         kamp_p1, kamp_px, kamp_p2 = beregn_sannsynligheter(
             kamp_home_goals, kamp_away_goals
             )
         
-            st.write(f"🏠 Hjemmeseier: {kamp_p1:.1%} | 🤝 Uavgjort: {kamp_px:.1%} | ⚽ Borteseier: {kamp_p2:.1%}")
+        st.write(f"🏠 Hjemmeseier: {kamp_p1:.1%} | 🤝 Uavgjort: {kamp_px:.1%} | ⚽ Borteseier: {kamp_p2:.1%}")
 
     else:
         st.info("Ingen kommende kamper tilgjengelig fra API-et.")
