@@ -166,6 +166,9 @@ if league in ligakoder:
             bortestatistikk = finn_lagstatistikk(bortelag, lagstatistikk)
 
             st.write(f"{dato}: {hjemmelag} vs {bortelag}")
+            
+            st.write("DEBUG lagstatistikk:", hjemmestatistikk is not None, bortestatistikk is not None)
+
             if (
         hjemmestatistikk
         and bortestatistikk
