@@ -111,7 +111,7 @@ st.caption("Demoversjon – kun virtuelle penger")
 leagues = {
     "Eliteserien": ["Viking", "Bodø/Glimt"],
     "Premier League": ["Arsenal", "Chelsea"],
-    "Bundesliga": ["Bayern München", "Dortmund"],
+    "Bundesliga": ["FC Bayern München", "Borussia Dortmund"],
     "2. Bundesliga": ["Schalke", "Hertha Berlin"]
 }
 
