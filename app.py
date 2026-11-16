@@ -120,6 +120,9 @@ if league in ligakoder:
 
 
 
+hjemmestatistikk = None
+bortestatistikk = None
+
 if league in ligakoder:
     st.subheader("Kommende kamper")
     kamper = hent_kamper(ligakoder[league])
@@ -137,13 +140,23 @@ if league in ligakoder:
     else:
         st.info("Ingen kommende kamper tilgjengelig fra API-et.")
 st.subheader(f"{home} vs {away}")
+if hjemmestatistikk and bortestatistikk:
+    home_goals = (
+        hjemmestatistikk["snitt_scoret"]
+        + bortestatistikk["snitt_sluppet_inn"]
+    ) / 2
 
-home_goals = st.slider(
-    "Forventede hjemmemål", 0.2, 4.0, 1.7, 0.1
-)
-away_goals = st.slider(
-    "Forventede bortemål", 0.2, 4.0, 1.1, 0.1
-)
+    away_goals = (
+        bortestatistikk["snitt_scoret"]
+        + hjemmestatistikk["snitt_sluppet_inn"]
+    ) / 2
+
+    home_goals = max(0.2, home_goals)
+    away_goals = max(0.2, away_goals)
+
+else:
+    home_goals = 1.7
+    away_goals = 1.1
 
 def poisson(k, lam):
     return math.exp(-lam) * lam**k / math.factorial(k)
