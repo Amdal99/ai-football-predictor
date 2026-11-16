@@ -149,8 +149,8 @@ if league in ligakoder:
 
 
 
-hjemmestatistikk = None
-bortestatistikk = None
+hjemmestatistikk = finn_lagstatistikk(home, lagstatistikk)
+bortestatistikk = finn_lagstatistikk(away, lagstatistikk)
 
 if league in ligakoder:
     st.subheader("Kommende kamper")
@@ -161,34 +161,35 @@ if league in ligakoder:
             hjemmelag = kamp["homeTeam"]["name"]
             bortelag = kamp["awayTeam"]["name"]
             dato = kamp["utcDate"][:10]
-            hjemmestatistikk = finn_lagstatistikk(hjemmelag, lagstatistikk)
+            kamp_hjemmestatistikk = finn_lagstatistikk(hjemmelag, lagstatistikk)
             
-            bortestatistikk = finn_lagstatistikk(bortelag, lagstatistikk)
+            kamp_bortestatistikk = finn_lagstatistikk(bortelag, lagstatistikk)
 
             st.write(f"{dato}: {hjemmelag} vs {bortelag}")
             
-            st.write("DEBUG lagstatistikk:", hjemmestatistikk is not None, bortestatistikk is not None)
+            st.write("DEBUG lagstatistikk:", kamp_hjemmestatistikk is not None, kamp_bortestatistikk is not None)
 
             if (
-        hjemmestatistikk
-        and bortestatistikk
+        kamp_hjemmestatistikk
+        and kamp_bortestatistikk
+        
         and all(
-        key in hjemmestatistikk and key in bortestatistikk
+        key in kamp_hjemmestatistikk and key in kamp_bortestatistikk
         for key in ("snitt_scoret", "snitt_sluppet_inn")
     )
             ):
                 kamp_home_goals = max(
         0.2,
         (
-            hjemmestatistikk["snitt_scoret"]
-            + bortestatistikk["snitt_sluppet_inn"]
+            kamp_hjemmestatistikk["snitt_scoret"]
+            + kamp_bortestatistikk["snitt_sluppet_inn"]
         ) / 2
     )
                 kamp_away_goals = max(
         0.2,
         (
-            bortestatistikk["snitt_scoret"]
-            + hjemmestatistikk["snitt_sluppet_inn"]
+            kamp_bortestatistikk["snitt_scoret"]
+            + kamp_hjemmestatistikk["snitt_sluppet_inn"]
         ) / 2
     )
         else:
