@@ -102,8 +102,17 @@ def beregn_lagstatistikk(kamper):
     return statistikk
 
 
+
 def finn_lagstatistikk(lagnavn, statistikk):
-    return statistikk.get(lagnavn)
+    if lagnavn in statistikk:
+        return statistikk[lagnavn]
+
+    for navn, tall in statistikk.items():
+        if lagnavn.lower() in navn.lower() or navn.lower() in lagnavn.lower():
+            return tall
+
+    return None
+
 
 st.title("⚽ AI Football Predictor")
 st.caption("Demoversjon – kun virtuelle penger")
