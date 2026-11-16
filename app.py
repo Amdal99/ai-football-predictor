@@ -194,6 +194,9 @@ if league in ligakoder:
         else:
                 kamp_home_goals = 1.7
                 kamp_away_goals = 1.1
+            
+            st.write("DEBUG forventede mål:", kamp_home_goals, kamp_away_goals)
+
         kamp_p1, kamp_px, kamp_p2 = beregn_sannsynligheter(
             kamp_home_goals, kamp_away_goals
             )
