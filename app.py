@@ -7,6 +7,26 @@ st.set_page_config(
     page_icon="⚽",
     layout="wide"
 )
+def poisson(k, lam):
+    return math.exp(-lam) * lam**k / math.factorial(k)
+
+def beregn_sannsynligheter(home_goals, away_goals):
+    p1 = px = p2 = 0.0
+
+    for h in range(16):
+        for a in range(16):
+            p = poisson(h, home_goals) * poisson(a, away_goals)
+
+            if h > a:
+                p1 += p
+            elif h == a:
+                px += p
+            else:
+                p2 += p
+
+    total = p1 + px + p2
+
+    return p1 / total, px / total, p2 / total
 
 API_KEY = st.secrets["FOOTBALL_API_KEY"]
 HEADERS = {"X-Auth-Token": API_KEY}
@@ -137,10 +157,50 @@ if league in ligakoder:
             bortestatistikk = finn_lagstatistikk(bortelag, lagstatistikk)
 
             st.write(f"{dato}: {hjemmelag} vs {bortelag}")
+            if (
+        hjemmestatistikk
+        and bortestatistikk
+        and all(
+        key in hjemmestatistikk and key in bortestatistikk
+        for key in ("snitt_scoret", "snitt_sluppet_inn")
+    )
+            ):
+                kamp_home_goals = max(
+        0.2,
+        (
+            hjemmestatistikk["snitt_scoret"]
+            + bortestatistikk["snitt_sluppet_inn"]
+        ) / 2
+    )
+                kamp_away_goals = max(
+        0.2,
+        (
+            bortestatistikk["snitt_scoret"]
+            + hjemmestatistikk["snitt_sluppet_inn"]
+        ) / 2
+    )
+            else:
+            kamp_home_goals = 1.7
+            kamp_away_goals = 1.1
+        kamp_p1, kamp_px, kamp_p2 = beregn_sannsynligheter(
+            kamp_home_goals, kamp_away_goals
+            )
+        
+            st.write(f"🏠 Hjemmeseier: {kamp_p1:.1%} | 🤝 Uavgjort: {kamp_px:.1%} | ⚽ Borteseier: {kamp_p2:.1%}")
+
     else:
         st.info("Ingen kommende kamper tilgjengelig fra API-et.")
 st.subheader(f"{home} vs {away}")
-if hjemmestatistikk and bortestatistikk:
+
+if (
+    hjemmestatistikk
+    and bortestatistikk
+    and all(
+        key in hjemmestatistikk and key in bortestatistikk
+        for key in ("snitt_scoret", "snitt_sluppet_inn")
+    )
+):
+
     home_goals = (
         hjemmestatistikk["snitt_scoret"]
         + bortestatistikk["snitt_sluppet_inn"]
@@ -158,22 +218,9 @@ else:
     home_goals = 1.7
     away_goals = 1.1
 
-def poisson(k, lam):
-    return math.exp(-lam) * lam**k / math.factorial(k)
 
-p1 = px = p2 = 0.0
-for h in range(16):
-    for a in range(16):
-        p = poisson(h, home_goals) * poisson(a, away_goals)
-        if h > a:
-            p1 += p
-        elif h == a:
-            px += p
-        else:
-            p2 += p
 
-total = p1 + px + p2
-p1, px, p2 = [p / total for p in (p1, px, p2)]
+p1, px, p2 = beregn_sannsynligheter(home_goals, away_goals)
 
 c1, c2, c3 = st.columns(3)
 c1.metric("Hjemmeseier", f"{p1:.1%}")
