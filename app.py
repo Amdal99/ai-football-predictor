@@ -135,7 +135,8 @@ ligakoder = {
 }
 
 
-
+hjemmestatistikk = None
+bortestatistikk = None
 if league in ligakoder:
     historiske_kamper = hent_resultater(ligakoder[league])
     lagstatistikk = beregn_lagstatistikk(historiske_kamper)
@@ -149,8 +150,8 @@ if league in ligakoder:
 
 
 
-hjemmestatistikk = finn_lagstatistikk(home, lagstatistikk)
-bortestatistikk = finn_lagstatistikk(away, lagstatistikk)
+    hjemmestatistikk = finn_lagstatistikk(home, lagstatistikk)
+    bortestatistikk = finn_lagstatistikk(away, lagstatistikk)
 
 if league in ligakoder:
     st.subheader("Kommende kamper")
